@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { isLogin } from "../util";
 import { Navigate, useNavigate } from "react-router";
 interface User {
@@ -7,6 +6,7 @@ interface User {
   name: string;
   avatarUrl: string;
 }
+
 export const withAuth = (Component: any) => {
   const AuthComponent = (props: any) => {
     const navigate = useNavigate();
@@ -15,13 +15,11 @@ export const withAuth = (Component: any) => {
     const userInfo: User =
       typeof userInfoString === "string" ? JSON.parse(userInfoString) : null;
 
-    useEffect(() => {
-      if (!isLogin()) {
-        navigate("/login");
-      }
-    }, []);
-
-    return Component({ ...props });
+    if (!isLogin()) {
+      return <Navigate to="/login" replace={true} />;
+    } else {
+      return Component({ ...props, userInfo });
+    }
   };
 
   return AuthComponent;

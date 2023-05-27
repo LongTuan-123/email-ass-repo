@@ -1,19 +1,15 @@
 import { Outlet } from "react-router";
 import ConnectLogo from "../assets/connect-logo-white.svg";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { withAuth } from "../hocs/withAuth";
 interface User {
   email: string;
   password: string;
   name: string;
   avatarUrl: string;
 }
-export const Layout = () => {
-  const userInfoString: string | null = localStorage.getItem("user");
-  const userInfo: User =
-    typeof userInfoString === "string" ? JSON.parse(userInfoString) : null;
-  const [isActived, setIsActived] = useState<boolean>(false);
 
+const Layout = ({ userInfo }: { userInfo: User }) => {
   const onLogout = (): void => {
     window.localStorage.removeItem("user");
   };
@@ -96,9 +92,7 @@ export const Layout = () => {
             </Link>
             <Link
               aria-current="page"
-              className={`text-white flex w-full h-14 items-center justify-center font-light text-md ${
-                isActived ? "bg-blue-700" : ""
-              }`}
+              className={`text-white flex w-full h-14 items-center justify-center font-light text-md`}
               to="email"
             >
               <svg
@@ -211,3 +205,5 @@ export const Layout = () => {
     </div>
   );
 };
+
+export default withAuth(Layout);
